@@ -1,1 +1,3 @@
 ALLOWED_FORMATS = {"mp3", "mp4"}
+UPLOADS_FILE_FOLDER = "uploads"
+DOWNLOADS_FILE_FOLDER = "downloads"
