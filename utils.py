@@ -2,6 +2,7 @@ import os
 
 import settings
 
+
 def allowed_file(filename: str) -> bool:
     """
     Checks if the format for the file received is acceptable. For this
@@ -22,3 +23,20 @@ def allowed_file(filename: str) -> bool:
         return True
 
     return False
+
+
+def get_file_path(filename_path: list[str]) -> str:
+    """
+    Returns the path of the file.
+
+    Parameters
+    ----------
+    filename_path : list[str]
+        Path components of the filename, it can be a video or audio file.
+
+    Returns
+    -------
+    str
+        Absolute path of the file.
+    """
+    return os.path.join(*filename_path)
