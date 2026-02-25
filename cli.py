@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
 from settings import ALLOWED_CLI_OPTIONS
+from utils import allowed_file
 
 
 parser = ArgumentParser(
@@ -45,5 +46,10 @@ def get_filename(parser: ArgumentParser = parser) -> list[str] | None:
     list[str] | None
         Filenames to process, or None if no filename was provided.
     """
-    args = parser.parse_args()
-    return args.filename
+
+    filenames = parser.parse_args().filename
+    for filename in filenames:
+        if not allowed_file(filename):
+            raise ValueError(f"File format not allowed: {filename}")
+
+    return filenames

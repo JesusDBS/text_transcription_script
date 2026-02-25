@@ -7,8 +7,8 @@ class Options(Enum):
 
 
 class Formats(Enum):
-    MP3 = "mp3"
-    MP4 = "mp4"
+    MP3 = ".mp3"
+    MP4 = ".mp4"
 
 
 ALLOWED_CLI_OPTIONS = [option.value for option in Options]
