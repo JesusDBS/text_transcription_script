@@ -16,3 +16,4 @@ ALLOWED_FORMATS = [format.value for format in Formats]
 
 UPLOADS_FILE_FOLDER = "uploads"
 DOWNLOADS_FILE_FOLDER = "downloads"
+TRANSCRIPTION_CHUNK_DURATION = 60

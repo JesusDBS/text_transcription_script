@@ -1,7 +1,4 @@
-import os
-
 import settings
-import utils
 
 from commands import Command, commands
 from cli import get_option, get_filename
@@ -14,6 +11,9 @@ OPTIONS_MAPPER: dict[str, Command] = {
 
 def main():
     option = OPTIONS_MAPPER.get(get_option(), None)
+    # TODO implement file processing visualization, for example with tqdm
+    # TODO implement processing all the files in the uploads folder if no filename is provided
+    # TODO implement file deletion service
     if option is not None:
         option.execute(get_filename())
 
