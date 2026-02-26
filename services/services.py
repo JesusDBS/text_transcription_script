@@ -21,14 +21,13 @@ class TranscriptionService(ABC):
 class GoogleSpeechRecognitionService(TranscriptionService):
     def __init__(self) -> None:
         super().__init__()
-        self.transcripted_audio_file_name: str | None = None
         self.transcripted_audio_file_path: str | None = None
 
     def _set_transcripted_audio_file(self, filename: str) -> None:
-        self.transcripted_audio_file_name = utils.change_filename_extension(
+        transcripted_audio_file_name = utils.change_filename_extension(
             filename, ".wav")
         self.transcripted_audio_file_path = utils.get_file_path(
-            self.transcripted_audio_file_name, settings.DOWNLOADS_FILE_FOLDER)
+            transcripted_audio_file_name, settings.DOWNLOADS_FILE_FOLDER)
 
     def _write_transcripted_audio_file(self, filename: str, file_type: str) -> None:
         file_path = utils.get_file_path(
