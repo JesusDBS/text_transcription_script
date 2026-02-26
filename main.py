@@ -1,11 +1,10 @@
-import settings
-
 from commands import Command, commands
 from cli import get_option, get_filename
+from settings import Options
 
 OPTIONS_MAPPER: dict[str, Command] = {
-    settings.Options.TRANS.value: commands.TranscriptFilesCommand(),
-    settings.Options.DELETE.value: commands.DeleteFilesCommand()
+    Options.TRANS.value: commands.TranscriptFilesCommand(),
+    Options.DELETE.value: commands.DeleteFilesCommand()
 }
 
 
