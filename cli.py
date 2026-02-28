@@ -12,6 +12,7 @@ parser.add_argument('-o', '--option', type=str, choices=ALLOWED_CLI_OPTIONS, req
                     help="Option to execute, it can be 'trans' to transcribe a single file or 'delete' to delete a file from the uploads folder")
 parser.add_argument('-f', '--filename', type=str, action="extend", nargs="+",
                     help="Filename, it can be a video or audio file stored in the uploads folder.")
+#TODO add a parser for the language of the transcription, for example with the option -l or --language
 
 
 def get_option(parser: ArgumentParser = parser) -> str:

@@ -65,19 +65,21 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             raise ValueError("Transcripted audio file path is not set.")
 
         recognizer = speech_recognition.Recognizer()
+        transcription_file = utils.change_filename_extension(
+            self.transcripted_audio_file_path, ".txt"
+        )
         for record_chunck in tqdm(range(0, total_duration), desc="Transcribing audio file"):
             with speech_recognition.AudioFile(self.transcripted_audio_file_path) as source:
                 audio = recognizer.record(
                     source, offset=record_chunck*settings.TRANSCRIPTION_CHUNK_DURATION,
                     duration=settings.TRANSCRIPTION_CHUNK_DURATION
                 )
-
-            transcription_file = utils.change_filename_extension(
-                self.transcripted_audio_file_path, ".txt"
-            )
-            with open(transcription_file, "a") as f:
-                f.write(recognizer.recognize_google(audio))
-                f.write(" ")
+            try:
+                with open(transcription_file, "a") as f:
+                    f.write(recognizer.recognize_google(audio))
+                    f.write(" ")
+            except speech_recognition.UnknownValueError:
+                pass
 
     def transcript(self, filename: str) -> None:
         file_type = utils.get_file_type(filename)
