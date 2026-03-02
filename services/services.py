@@ -24,13 +24,13 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         super().__init__()
         self.transcripted_audio_file_path: str | None = None
 
-    def _set_transcripted_audio_file(self, filename: str) -> None:
+    def _set_transcripted_audio_file_path(self, filename: str) -> None:
         transcripted_audio_file_name = utils.change_filename_extension(
             filename, ".wav")
         self.transcripted_audio_file_path = utils.get_file_path(
             transcripted_audio_file_name, DOWNLOADS_FILE_FOLDER)
 
-    def _write_transcripted_audio_file(self, filename: str, file_type: str) -> None:
+    def _create_transcripted_audio_file(self, filename: str, file_type: str) -> None:
         file_path = utils.get_file_path(
             filename, UPLOADS_FILE_FOLDER)
 
@@ -100,8 +100,8 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         if file_type is not None:
             try:
                 print(f"Transcribing file: {filename}")
-                self._set_transcripted_audio_file(filename)
-                self._write_transcripted_audio_file(filename, file_type)
+                self._set_transcripted_audio_file_path(filename)
+                self._create_transcripted_audio_file(filename, file_type)
                 total_duration = self._compute_total_duration()
                 self._transcript(total_duration)
                 print("Transcription complete!")
