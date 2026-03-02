@@ -13,4 +13,4 @@ class TranscriptFilesCommand(Command):
 class DeleteFilesCommand(Command):
     def execute(self, files_path: list[str]) -> None:
         for file_path in files_path:
-            print(f"Deleting file: {file_path}")
+            services.delete_service(file_path)

@@ -1,3 +1,4 @@
+import os
 import wave
 import math
 import contextlib
@@ -92,6 +93,15 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             print("Transcription complete!")
 
 
-def delete_service(filename: str) -> None:
-    filename = utils.get_file_path(filename, settings.UPLOADS_FILE_FOLDER)
-    pass
+def delete_service(filepath: str) -> None:
+    try:
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+            print(f'....{filepath} has been deleted....', '\n')
+
+    except FileExistsError as error:
+        raise error
+    except FileNotFoundError as error:
+        raise error
+    except Exception as error:
+        raise error
