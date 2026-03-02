@@ -65,22 +65,36 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         if self.transcripted_audio_file_path is None:
             raise ValueError("Transcripted audio file path is not set.")
 
-        recognizer = speech_recognition.Recognizer()
-        transcription_file = utils.change_filename_extension(
-            self.transcripted_audio_file_path, ".txt"
-        )
-        for record_chunck in tqdm(range(0, total_duration), desc="Transcribing audio file"):
-            with speech_recognition.AudioFile(self.transcripted_audio_file_path) as source:
-                audio = recognizer.record(
-                    source, offset=record_chunck*TRANSCRIPTION_CHUNK_DURATION,
-                    duration=TRANSCRIPTION_CHUNK_DURATION
-                )
+        def get_transcription_range(total_duration: int) -> tqdm:
+            return tqdm(range(0, total_duration), desc="Transcribing audio file")
+
+        def get_audio_file() -> speech_recognition.AudioFile:
+            return speech_recognition.AudioFile(self.transcripted_audio_file_path)
+
+        def get_offset(record_chunck: int) -> int:
+            return record_chunck * TRANSCRIPTION_CHUNK_DURATION
+
+        def save_transcription_in_file(recognizer: speech_recognition.Recognizer,
+                                       audio: speech_recognition.AudioData,
+                                       transcription_file: str) -> None:
             try:
                 with open(transcription_file, "a") as f:
                     f.write(recognizer.recognize_google(audio))
                     f.write(" ")
             except speech_recognition.UnknownValueError:
                 pass
+
+        recognizer = speech_recognition.Recognizer()
+        transcription_file = utils.change_filename_extension(
+            self.transcripted_audio_file_path, ".txt"
+        )
+        for record_chunck in get_transcription_range(total_duration):
+            with get_audio_file() as source:
+                audio = recognizer.record(
+                    source, offset=get_offset(record_chunck),
+                    duration=TRANSCRIPTION_CHUNK_DURATION
+                )
+            save_transcription_in_file(recognizer, audio, transcription_file)
 
     def transcript(self, filename: str) -> None:
         file_type = utils.get_file_type(filename)
