@@ -5,8 +5,8 @@ import contextlib
 import speech_recognition
 
 import utils
-import settings
 
+from settings import UPLOADS_FILE_FOLDER, DOWNLOADS_FILE_FOLDER, TRANSCRIPTION_CHUNK_DURATION
 from abc import ABC, abstractmethod
 from moviepy import AudioFileClip
 from pydub import AudioSegment
@@ -28,11 +28,11 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         transcripted_audio_file_name = utils.change_filename_extension(
             filename, ".wav")
         self.transcripted_audio_file_path = utils.get_file_path(
-            transcripted_audio_file_name, settings.DOWNLOADS_FILE_FOLDER)
+            transcripted_audio_file_name, DOWNLOADS_FILE_FOLDER)
 
     def _write_transcripted_audio_file(self, filename: str, file_type: str) -> None:
         file_path = utils.get_file_path(
-            filename, settings.UPLOADS_FILE_FOLDER)
+            filename, UPLOADS_FILE_FOLDER)
 
         if file_type.startswith("video"):
             audioclip = AudioFileClip(file_path)
@@ -52,7 +52,7 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             duration = frames / float(rate)
 
         total_duration = math.ceil(
-            duration / settings.TRANSCRIPTION_CHUNK_DURATION)
+            duration / TRANSCRIPTION_CHUNK_DURATION)
 
         return total_duration
 
@@ -72,8 +72,8 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         for record_chunck in tqdm(range(0, total_duration), desc="Transcribing audio file"):
             with speech_recognition.AudioFile(self.transcripted_audio_file_path) as source:
                 audio = recognizer.record(
-                    source, offset=record_chunck*settings.TRANSCRIPTION_CHUNK_DURATION,
-                    duration=settings.TRANSCRIPTION_CHUNK_DURATION
+                    source, offset=record_chunck*TRANSCRIPTION_CHUNK_DURATION,
+                    duration=TRANSCRIPTION_CHUNK_DURATION
                 )
             try:
                 with open(transcription_file, "a") as f:
