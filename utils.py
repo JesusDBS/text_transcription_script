@@ -25,21 +25,23 @@ def allowed_file(filename: str) -> bool:
     return False
 
 
-def get_file_path(filename_path: str, file_folder: str) -> str:
+def get_file_path(filename: str, file_folder: str) -> str:
     """
     Returns the absolute path of the file.
 
     Parameters
     ----------
-    filename_path : str
-        Path components of the filename, it can be a video or audio file.
+    filename : str
+        Filename, it can be a video or audio file.
+    file_folder : str
+        Folder where the file is stored.
 
     Returns
     -------
     str
         Absolute path of the file.
     """
-    filename_path = os.path.join(file_folder, filename_path)
+    filename_path = os.path.join(file_folder, filename)
     return os.path.abspath(filename_path)
 
 

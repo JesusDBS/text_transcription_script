@@ -93,5 +93,5 @@ class GoogleSpeechRecognitionService(TranscriptionService):
 
 
 def delete_service(filename: str) -> None:
-    # TODO: Implement delete service
+    filename = utils.get_file_path(filename, settings.UPLOADS_FILE_FOLDER)
     pass
