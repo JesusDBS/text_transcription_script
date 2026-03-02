@@ -65,7 +65,12 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         if self.transcripted_audio_file_path is None:
             raise ValueError("Transcripted audio file path is not set.")
 
-        def get_transcription_range(total_duration: int) -> tqdm:
+        recognizer = speech_recognition.Recognizer()
+        transcription_file = utils.change_filename_extension(
+            self.transcripted_audio_file_path, ".txt"
+        )
+
+        def get_transcription_range() -> tqdm:
             return tqdm(range(0, total_duration), desc="Transcribing audio file")
 
         def get_audio_file() -> speech_recognition.AudioFile:
@@ -74,9 +79,7 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         def get_offset(record_chunck: int) -> int:
             return record_chunck * TRANSCRIPTION_CHUNK_DURATION
 
-        def save_transcription_in_file(recognizer: speech_recognition.Recognizer,
-                                       audio: speech_recognition.AudioData,
-                                       transcription_file: str) -> None:
+        def save_transcription_in_file(audio: speech_recognition.AudioData) -> None:
             try:
                 with open(transcription_file, "a") as f:
                     f.write(recognizer.recognize_google(audio))
@@ -84,27 +87,27 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             except speech_recognition.UnknownValueError:
                 pass
 
-        recognizer = speech_recognition.Recognizer()
-        transcription_file = utils.change_filename_extension(
-            self.transcripted_audio_file_path, ".txt"
-        )
-        for record_chunck in get_transcription_range(total_duration):
+        for record_chunck in get_transcription_range():
             with get_audio_file() as source:
                 audio = recognizer.record(
                     source, offset=get_offset(record_chunck),
                     duration=TRANSCRIPTION_CHUNK_DURATION
                 )
-            save_transcription_in_file(recognizer, audio, transcription_file)
+            save_transcription_in_file(audio)
 
     def transcript(self, filename: str) -> None:
         file_type = utils.get_file_type(filename)
         if file_type is not None:
-            print(f"Transcribing file: {filename}")
-            self._set_transcripted_audio_file(filename)
-            self._write_transcripted_audio_file(filename, file_type)
-            total_duration = self._compute_total_duration()
-            self._transcript(total_duration)
-            print("Transcription complete!")
+            try:
+                print(f"Transcribing file: {filename}")
+                self._set_transcripted_audio_file(filename)
+                self._write_transcripted_audio_file(filename, file_type)
+                total_duration = self._compute_total_duration()
+                self._transcript(total_duration)
+                print("Transcription complete!")
+            except Exception as e:
+                print(f"Error transcribing {filename}: {e}")
+                raise
 
 
 def delete_service(filepath: str) -> None:
