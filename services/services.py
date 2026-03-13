@@ -6,7 +6,7 @@ import speech_recognition
 
 import utils
 
-from settings import UPLOADS_FILE_FOLDER, DOWNLOADS_FILE_FOLDER, TRANSCRIPTION_CHUNK_DURATION
+from settings import UPLOADS_FILE_FOLDER, DOWNLOADS_FILE_FOLDER, TRANSCRIPTION_CHUNK_DURATION, RECOGNIZE_GOOGLE_LANGUAGE
 from abc import ABC, abstractmethod
 from moviepy import AudioFileClip
 from pydub import AudioSegment
@@ -82,7 +82,8 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         def save_transcription_in_file(audio: speech_recognition.AudioData) -> None:
             try:
                 with open(transcription_file, "a") as f:
-                    f.write(recognizer.recognize_google(audio))
+                    f.write(recognizer.recognize_google(
+                        audio, language=RECOGNIZE_GOOGLE_LANGUAGE))
                     f.write(" ")
             except speech_recognition.UnknownValueError:
                 pass
