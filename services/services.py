@@ -3,14 +3,14 @@ import wave
 import math
 import contextlib
 import speech_recognition
+import utils
+import settings as s
 
 from abc import ABC, abstractmethod
 from moviepy import AudioFileClip
 from pydub import AudioSegment
 from tqdm import tqdm
-
-import utils
-import settings as s
+from enum import StrEnum, auto
 
 
 class TranscriptionService(ABC):
@@ -109,6 +109,24 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             except Exception as e:
                 print(f"Error transcribing {filename}: {e}")
                 raise
+
+
+class TranscriptionServiceBackends(StrEnum):
+    GOOGLE_SPEECH_RECOGNITION = auto()
+
+
+TRANSCRIPTION_SERVICE_BACKENDS_MAPPER: dict[str, type[TranscriptionService]] = {
+    TranscriptionServiceBackends.GOOGLE_SPEECH_RECOGNITION.value: GoogleSpeechRecognitionService
+}
+
+
+def set_transcript_service(active_transcript_backed: str) -> TranscriptionService:
+    if active_transcript_backed not in TRANSCRIPTION_SERVICE_BACKENDS_MAPPER.keys():
+        raise KeyError(
+            f"{active_transcript_backed} is not an available backend")
+
+    transcript_service = TRANSCRIPTION_SERVICE_BACKENDS_MAPPER[active_transcript_backed]
+    return transcript_service()
 
 
 def delete_service(filepath: str) -> None:

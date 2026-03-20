@@ -1,7 +1,9 @@
 from . import Command
 from services import services
+from settings import ACTIVE_TRANSCRIPT_BACKEND
 
-transcript_service = services.GoogleSpeechRecognitionService()
+transcript_service = services.set_transcript_service(
+    active_transcript_backed=ACTIVE_TRANSCRIPT_BACKEND)
 
 
 class TranscriptFilesCommand(Command):

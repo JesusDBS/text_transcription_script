@@ -26,3 +26,8 @@ UPLOADS_FILE_FOLDER = "uploads"
 DOWNLOADS_FILE_FOLDER = "downloads"
 TRANSCRIPTION_CHUNK_DURATION = 60
 RECOGNIZE_GOOGLE_LANGUAGE = "en-US"
+
+# NOTE
+# The available backends include:
+# - google_speech_recognition
+ACTIVE_TRANSCRIPT_BACKEND = "google_speech_recognition"
