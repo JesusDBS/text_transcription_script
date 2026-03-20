@@ -4,13 +4,13 @@ import math
 import contextlib
 import speech_recognition
 
-import utils
-
-from settings import UPLOADS_FILE_FOLDER, DOWNLOADS_FILE_FOLDER, TRANSCRIPTION_CHUNK_DURATION, RECOGNIZE_GOOGLE_LANGUAGE
 from abc import ABC, abstractmethod
 from moviepy import AudioFileClip
 from pydub import AudioSegment
 from tqdm import tqdm
+
+import utils
+import settings as s
 
 
 class TranscriptionService(ABC):
@@ -28,11 +28,11 @@ class GoogleSpeechRecognitionService(TranscriptionService):
         transcripted_audio_file_name = utils.change_filename_extension(
             filename, ".wav")
         self.transcripted_audio_file_path = utils.get_file_path(
-            transcripted_audio_file_name, DOWNLOADS_FILE_FOLDER)
+            transcripted_audio_file_name, s.DOWNLOADS_FILE_FOLDER)
 
     def _create_transcripted_audio_file(self, filename: str, file_type: str) -> None:
         file_path = utils.get_file_path(
-            filename, UPLOADS_FILE_FOLDER)
+            filename, s.UPLOADS_FILE_FOLDER)
 
         if file_type.startswith("video"):
             audioclip = AudioFileClip(file_path)
@@ -52,7 +52,7 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             duration = frames / float(rate)
 
         total_duration = math.ceil(
-            duration / TRANSCRIPTION_CHUNK_DURATION)
+            duration / s.TRANSCRIPTION_CHUNK_DURATION)
 
         return total_duration
 
@@ -77,13 +77,13 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             return speech_recognition.AudioFile(self.transcripted_audio_file_path)
 
         def get_offset(record_chunck: int) -> int:
-            return record_chunck * TRANSCRIPTION_CHUNK_DURATION
+            return record_chunck * s.TRANSCRIPTION_CHUNK_DURATION
 
         def save_transcription_in_file(audio: speech_recognition.AudioData) -> None:
             try:
                 with open(transcription_file, "a") as f:
                     f.write(recognizer.recognize_google(
-                        audio, language=RECOGNIZE_GOOGLE_LANGUAGE))
+                        audio, language=s.RECOGNIZE_GOOGLE_LANGUAGE))
                     f.write(" ")
             except speech_recognition.UnknownValueError:
                 pass
@@ -92,7 +92,7 @@ class GoogleSpeechRecognitionService(TranscriptionService):
             with get_audio_file() as source:
                 audio = recognizer.record(
                     source, offset=get_offset(record_chunck),
-                    duration=TRANSCRIPTION_CHUNK_DURATION
+                    duration=s.TRANSCRIPTION_CHUNK_DURATION
                 )
             save_transcription_in_file(audio)
 
