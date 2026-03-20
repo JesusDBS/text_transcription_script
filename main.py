@@ -2,9 +2,9 @@ from commands import Command, commands
 from cli import get_option, get_filename
 from settings import Options
 
-OPTIONS_MAPPER: dict[str, Command] = {
-    Options.TRANS.value: commands.TranscriptFilesCommand(),
-    Options.DELETE.value: commands.DeleteFilesCommand()
+OPTIONS_MAPPER: dict[str, type[Command]] = {
+    Options.TRANS.value: commands.TranscriptFilesCommand,
+    Options.DELETE.value: commands.DeleteFilesCommand
 }
 
 
@@ -14,7 +14,7 @@ def main():
     # TODO implement processing all the files in the uploads folder if no filename is provided
     # TODO create readme file
     if option is not None:
-        option.execute(get_filename())
+        option().execute(get_filename())
 
 
 if __name__ == "__main__":
