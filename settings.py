@@ -1,4 +1,5 @@
 from enum import StrEnum, auto
+from typing import TypeVar
 
 
 class Options(StrEnum):
@@ -11,11 +12,14 @@ class Formats(StrEnum):
     MP4 = auto()
 
 
-def _get_options_values(options: Options) -> list[str]:
+E = TypeVar('E', bound=StrEnum)
+
+
+def _get_options_values(options: type[E]) -> list[str]:
     return [option.value for option in options]
 
 
-def _get_formats_values(formats: Formats) -> list[str]:
+def _get_formats_values(formats: type[E]) -> list[str]:
     return [f'.{format.value}' for format in formats]
 
 
