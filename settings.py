@@ -1,7 +1,4 @@
 from enum import StrEnum, auto
-from typing import TypeVar, Type
-
-E = TypeVar('E', bound=StrEnum)
 
 
 class Options(StrEnum):
@@ -10,16 +7,20 @@ class Options(StrEnum):
 
 
 class Formats(StrEnum):
-    MP3 = ".mp3"
-    MP4 = ".mp4"
+    MP3 = auto()
+    MP4 = auto()
 
 
-def _get_enum_values(enum: Type[E]) -> list[str]:
-    return [member.value for member in enum]
+def _get_options_values(options: Options) -> list[str]:
+    return [option.value for option in options]
 
 
-ALLOWED_CLI_OPTIONS = _get_enum_values(Options)
-ALLOWED_FORMATS = _get_enum_values(Formats)
+def _get_formats_values(formats: Formats) -> list[str]:
+    return [f'.{format.value}' for format in formats]
+
+
+ALLOWED_CLI_OPTIONS = _get_options_values(Options)
+ALLOWED_FORMATS = _get_formats_values(Formats)
 
 UPLOADS_FILE_FOLDER = "uploads"
 DOWNLOADS_FILE_FOLDER = "downloads"
