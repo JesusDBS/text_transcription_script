@@ -120,12 +120,12 @@ TRANSCRIPTION_SERVICE_BACKENDS_MAPPER: dict[str, type[TranscriptionService]] = {
 }
 
 
-def set_transcript_service(active_transcript_backed: str) -> TranscriptionService:
-    if active_transcript_backed not in TRANSCRIPTION_SERVICE_BACKENDS_MAPPER.keys():
+def set_transcript_service(active_transcript_backend: str) -> TranscriptionService:
+    if active_transcript_backend not in TRANSCRIPTION_SERVICE_BACKENDS_MAPPER.keys():
         raise KeyError(
-            f"{active_transcript_backed} is not an available backend")
+            f"{active_transcript_backend} is not an available backend")
 
-    transcript_service = TRANSCRIPTION_SERVICE_BACKENDS_MAPPER[active_transcript_backed]
+    transcript_service = TRANSCRIPTION_SERVICE_BACKENDS_MAPPER[active_transcript_backend]
     return transcript_service()
 
 

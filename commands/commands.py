@@ -3,7 +3,7 @@ from services import services
 from settings import ACTIVE_TRANSCRIPT_BACKEND
 
 transcript_service = services.set_transcript_service(
-    active_transcript_backed=ACTIVE_TRANSCRIPT_BACKEND)
+    active_transcript_backend=ACTIVE_TRANSCRIPT_BACKEND)
 
 
 class TranscriptFilesCommand(Command):
