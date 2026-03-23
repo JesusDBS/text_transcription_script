@@ -127,17 +127,3 @@ def set_transcript_service(active_transcript_backend: str) -> TranscriptionServi
 
     transcript_service = TRANSCRIPTION_SERVICE_BACKENDS_MAPPER[active_transcript_backend]
     return transcript_service()
-
-
-def delete_service(filepath: str) -> None:
-    try:
-        if os.path.isfile(filepath):
-            os.remove(filepath)
-            print(f'....{filepath} has been deleted....', '\n')
-
-    except FileExistsError as error:
-        raise error
-    except FileNotFoundError as error:
-        raise error
-    except Exception as error:
-        raise error
