@@ -34,4 +34,5 @@ RECOGNIZE_GOOGLE_LANGUAGE = "en-US"
 # NOTE
 # The available backends include:
 # - google_speech_recognition
-ACTIVE_TRANSCRIPT_BACKEND = "google_speech_recognition"
+# - whisper_speech_recognition
+ACTIVE_TRANSCRIPT_BACKEND = "whisper_speech_recognition"
